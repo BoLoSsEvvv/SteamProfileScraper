@@ -40,13 +40,10 @@ for i in range(2, 22):
         button = driver.find_element(By.CSS_SELECTOR, f"div.search_row:nth-child({i}) > div:nth-child(2) > a:nth-child(1)")
         button.click()
 
-        # ссылка на аккаунт
-        get_url = driver.current_url
-        urls.append(str(get_url))
-
-        # никнейм парс
-        nickname = driver.find_element(By.CSS_SELECTOR, ".profile_header_centered_persona > div:nth-child(1) > span:nth-child(1)")
-        nicknames.append(nickname.text)
+        # никнейм + url парс
+        name_el = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".profile_header_centered_persona span")))
+        nicknames.append(name_el.text)
+        urls.append(driver.current_url)
 
         # проверка скрыт ли профиль
         try:
