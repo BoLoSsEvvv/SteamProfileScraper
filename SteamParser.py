@@ -11,7 +11,7 @@ import pandas as pd
 # установка вебдрайвера
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
-
+wait = WebDriverWait(driver, 30)
 
 # выбор ника
 nickname = input("Enter a nickname: ")
@@ -29,7 +29,8 @@ badges = []
 
 
 # небольшое ожидание, что бы страница точно прогрузилась и не выполнялся эксепшн
-WebDriverWait(driver, 2)
+wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#search_results")))
+rows = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#search_results .search_row")))
 
 # цикл для парсинга акков на одной странице
 for i in range(2, 22):
@@ -79,11 +80,11 @@ for i in range(2, 22):
 driver.quit()
 
 
-# cохранение в pandas  и запись в csv
+# cохранение в pandas и запись в csv
 df = pd.DataFrame({'URL': urls,
                    'NICKNAME': nicknames,
                    'LVL': levels,
                    'GAMES': games,
                    'BADGES': badges,
                    })
-df.to_csv("steam_data.csv", index=False, sep=';')
+df.to_csv("steam_data.csv", index=False, sep=';', encoding='utf-8-sig')
